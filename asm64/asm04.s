@@ -1,6 +1,3 @@
-section .bss
-    num resb 1
-
 section .text
 global _start
 
@@ -9,11 +6,11 @@ _start:
     mov eax, 0          ; 'sys_read' syscall number
     mov edi, 0          ; 'stdin' file descriptor
     mov edx, 1          ; Taille de la lecture (1 octet)
-    lea rsi, [num]      ; Adresse du tampon d'entrée
+    lea rsi, [rsp]      ; Adresse du tampon d'entrée sur la pile
     syscall             ; Appel système
 
     ; Convertir la chaîne en nombre
-    movzx rax, byte [num]   ; Charger le caractère dans rax (zéro étendu)
+    movzx rax, byte [rsp]   ; Charger le caractère dans rax (zéro étendu)
 
     ; Vérifier si le nombre est impair
     test al, 1
