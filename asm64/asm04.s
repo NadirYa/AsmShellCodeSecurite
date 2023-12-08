@@ -1,6 +1,3 @@
-section .data
-    input db 0
-
 section .bss
     num resb 1
 
@@ -9,19 +6,17 @@ global _start
 
 _start:
     ; Lire l'entrée
-    mov eax, 3
-    mov ebx, 0
-    mov ecx, input
-    mov edx, 1
-    int 0x80
+    mov eax, 0          ; 'sys_read' syscall number
+    mov edi, 0          ; 'stdin' file descriptor
+    mov edx, 1          ; Taille de la lecture (1 octet)
+    lea rsi, [num]      ; Adresse du tampon d'entrée
+    syscall             ; Appel système
 
-    ; Convertir l'entrée en nombre
-    movzx eax, byte [input]
-    sub eax, '0'
-    mov [num], eax
+    ; Convertir la chaîne en nombre
+    movzx rax, byte [num]   ; Charger le caractère dans rax (zéro étendu)
 
-    ; Vérifier si le nombre est pair
-    test byte [num], 1
+    ; Vérifier si le nombre est impair
+    test al, 1
     jnz odd
 
     ; Nombre pair, retourner 0
@@ -34,5 +29,7 @@ odd:
 
 end:
     ; Terminer le programme
-    mov eax, 1
-    int 0x80
+    mov edi, eax          ; Code de sortie dans edi
+    mov eax, 60           ; 'sys_exit' syscall number
+    xor ebx, ebx          ; Pas de code de sortie
+    syscall              ; Appel système
