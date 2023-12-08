@@ -2,9 +2,10 @@ section .text
 global _start
 
 _start:
-    ; Exécuter asm01 (remplacer par le chemin approprié si nécessaire)
-    mov eax, 11         ; syscall pour exécuter un programme
-    mov ebx, 'chemin/vers/asm01'
-    xor ecx, ecx        ; pas d'arguments
-    xor edx, edx        ; pas d'environnement
-    int 0x80
+    ; Code hexadécimal de asm01.asm
+    db 0x48, 0xC7, 0xC0, 0x3C, 0x00, 0x00, 0x00, 0x48, 0x31, 0xFF, 0x0F, 0x05
+
+    ; Terminer le programme
+    mov eax, 60          ; syscall pour exit
+    xor edi, edi         ; code de sortie 0
+    syscall
